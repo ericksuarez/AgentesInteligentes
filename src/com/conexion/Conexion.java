@@ -5,6 +5,7 @@
  */
 package com.conexion;
 
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -59,14 +60,15 @@ public class Conexion {
         return true;
     }
 
-    public ResultSet consulta(String sql) {
-        ResultSet resultado;
+    public ResultSet consulta(String sql) throws SQLException {
+        ResultSet resultado = null;
         try {
             Statement sentencia = conexion.createStatement();
             resultado = sentencia.executeQuery(sql);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (MySQLSyntaxErrorException ex) {
+            resultado.close();
+        }catch (SQLException ex) {
+            
         }
 
         return resultado;

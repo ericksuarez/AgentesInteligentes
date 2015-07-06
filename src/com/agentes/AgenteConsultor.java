@@ -1,6 +1,8 @@
 package com.agentes;
 
+import static com.agentes.PreparaBusqueda.ListaAllConsulta;
 import com.conexion.Conexion;
+import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import jade.core.AID;
 import jade.core.Agent;
 import java.awt.List;
@@ -8,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,22 +21,34 @@ import javax.swing.JOptionPane;
 public class AgenteConsultor extends Agent {
 
     private Conexion conexion;
-    String nombre;
 
-    public AgenteConsultor(String nombre) {
-        this.nombre = nombre;
-        AID id = new AID(nombre, AID.ISLOCALNAME);
-    }
 
     protected void setup() {
+        
+        PreparaBusqueda prebusq = new PreparaBusqueda();
+        
+        ArrayList<String> querys = new ArrayList<String>();
+        
         System.out.println("Bienvenido! Agente-Consultor " + getAID().getName() + " en acción.");
+        prebusq.initialize();
+//        querys = creaConsulta();
+        querys = ListaAllConsulta;
+        try {
+            if(!consulta(querys)){
+                JOptionPane.showMessageDialog(null, "No se encontraron resultados.");
+            }
+        } catch (MySQLSyntaxErrorException ex) {
+            Logger.getLogger(AgenteConsultor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AgenteConsultor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected void takeDown() {
         System.out.println("Agente-Consultor " + getAID().getName() + " Terminado.");
     }
 
-    public boolean consulta(ArrayList<String> sql) {
+    public boolean consulta(ArrayList<String> sql) throws SQLException {
 
         Boolean resp = true;
         ResultSet resultados;
@@ -50,8 +66,10 @@ public class AgenteConsultor extends Agent {
                     }
                     JOptionPane.showMessageDialog(null, "N° de tuplas resultantes (" + size + ")");
                     return true;
-                } catch (SQLException se) {
+                } catch (MySQLSyntaxErrorException se) {
                     JOptionPane.showMessageDialog(null, se);
+                    return false;
+                }catch (NullPointerException ex) {
                     return false;
                 }
             }
@@ -69,4 +87,5 @@ public class AgenteConsultor extends Agent {
         return query;
     }
 
+    
 }

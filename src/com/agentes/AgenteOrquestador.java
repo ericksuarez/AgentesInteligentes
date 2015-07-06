@@ -5,13 +5,18 @@
  */
 package com.agentes;
 
+import static com.agentes.Inicio.runjade;
 import com.conexion.Conexion;
 import com.ventana.GuiBusquedas;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.wrapper.AgentController;
+import jade.wrapper.ContainerController;
+import jade.wrapper.StaleProxyException;
 import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,6 +32,7 @@ public class AgenteOrquestador extends Agent {
     private GuiBusquedas ventana;
     private Conexion conexion;
     public int cnt = 0;
+    private ContainerController home = null;
 
     protected void setup() {
         System.out.println("Bienvenido! Agente-Orquestador " + getAID().getName() + " en acción.");
@@ -40,19 +46,18 @@ public class AgenteOrquestador extends Agent {
         System.out.println("Agente-Orquestador " + getAID().getName() + " terminado.");
     }
 
-      
-    public void creaConsultor(){
-        AgenteConsultor consultor = null;
-        ArrayList<String> querys = new ArrayList<String>();
-        
+    public void creaConsultor() {
+
+        ContainerController home = runjade.getHome();
         setCnt();
-        consultor = new AgenteConsultor("Consultor_" + getCnt());
-        querys = consultor.creaConsulta();
         
-        if(!consultor.consulta(querys)){
-            JOptionPane.showMessageDialog(null, "No se encontraron resultados.");
+        try {
+            AgentController a = home.createNewAgent("Consultor_" + getCnt(), AgenteConsultor.class.getName(), new Object[0]);
+            a.start();
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
         }
-       
+
     }
 
     public int getCnt() {
@@ -62,6 +67,5 @@ public class AgenteOrquestador extends Agent {
     public void setCnt() {
         this.cnt++;
     }
-    
-    
+
 }
