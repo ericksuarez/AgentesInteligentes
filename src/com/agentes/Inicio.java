@@ -9,8 +9,6 @@ package com.agentes;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

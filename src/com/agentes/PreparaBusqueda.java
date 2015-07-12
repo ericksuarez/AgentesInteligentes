@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.agentes;
 
-import java.awt.List;
-import java.sql.Array;
 import java.util.ArrayList;
+import static com.ventana.GuiBusquedas.busqueda;
 
 /**
  *
@@ -15,26 +9,28 @@ import java.util.ArrayList;
  */
 public class PreparaBusqueda {
 
-    public static String AllQuerys = "";
+    public static String AllQuerys = null;
     public static PreparaBusqueda prebu = new PreparaBusqueda();
-    public static ArrayList<String> ListaAllConsulta = new ArrayList<String>();
+    public static ArrayList<String> ListaAllConsulta = null;
 
-    public static void main(String[] args) {
-         PreparaBusqueda p = new PreparaBusqueda();
-         p.initialize();
-    }
-    
     public void initialize() {
 
-        String[] elementos = "autosnuevos ford".split(" ");//Busqueda
-        int n = 0;                  //Tipos para escoger
-        int r = elementos.length;   //Elementos elegidos
+        LimpiaBusqueda limpiabusqueda = new LimpiaBusqueda();
+        String buscando = limpiabusqueda.clearBusqueda(busqueda);
+        ListaAllConsulta = new ArrayList<String>();
+        ListaAllConsulta.clear();
+        AllQuerys = "";
+        
+//        String[] elementos = "autosnuevos ford".split(" ");//Busqueda
+        String[] elementos = buscando.split(" ");
+        int n = 0;                  
+        int r = elementos.length;   
 
         for (int i = 1; i <= elementos.length; i++) {
             Permutacion(elementos, "", i, r);
         }
 
-        System.out.println(AllQuerys);
+//        System.out.println(AllQuerys);
         String[] sent = AllQuerys.split(";");
 
             for (int i = 0; i < sent.length; i++) {
@@ -55,7 +51,7 @@ public class PreparaBusqueda {
                     ListaAllConsulta.add(prebu.SelectWhere(sent_2[0], sent_2[1], sent_2[2]));
                     ListaAllConsulta.add(prebu.SelectWhereColumna(sent_2[0], sent_2[1], sent_2[2]));
                 }
-                if (sent_2.length == 4) {
+                if (sent_2.length >= 4) {
                     System.out.println(prebu.SelectJoin(sent_2[0], sent_2[1], sent_2[2], sent_2[3]));
                     System.out.println(prebu.SelectJoin(sent_2[1], sent_2[2], sent_2[3], sent_2[2]));
                     System.out.println(prebu.SelectJoin(sent_2[2], sent_2[3], sent_2[0], sent_2[1]));
@@ -99,27 +95,12 @@ public class PreparaBusqueda {
     public String SelectJoin(String s, String s1, String s2, String s3){
         return "SELECT * FROM " + s + " JOIN " + s1 + " ON " +  s2 + " = " + s3 + ";";
     }
-//    public String[] GramaticaSql(int caso) {
-//
-//        String[] q = {
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ] ;",
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ] "
-//            + "WHERE [columna] [OPERADOR(X)] [valor]",
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ]"
-//            + "WHERE [columna] [OPERADOR(X)] [valor]"
-//            + "[EXTRA-CONDICION(X)]"
-//            + "[columna] [OPERADOR(X)] [valor];",
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ]"
-//            + "[NATURAL(X)] JOIN [tabla_referencia] ON [tabla_referencia.columna] [OPERADOR(X)] [valor] ;",
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ]"
-//            + "[NATURAL(X)] JOIN [tabla_referencia] ON [tabla_referencia.columna] [OPERADOR(X)] [valor]"
-//            + "WHERE [columna] [OPERADOR(X)] [valor] ;",
-//            "SELECT [ *,DISTINCT,columna ] FROM [ tabla_referencia ]"
-//            + "[NATURAL(X)] JOIN [tabla_referencia] ON [tabla_referencia.columna] [OPERADOR(X)] [valor]"
-//            + "WHERE [columna] [OPERADOR(X)] [valor] ;"
-//            + "ORDER BY [ORDEN(X)]",};
-//
-//        return q;
+    
+//    public static void main(String[] args) {
+//         PreparaBusqueda p = new PreparaBusqueda();
+//         p.initialize("");
 //    }
+    
+
 
 }
