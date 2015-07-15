@@ -48,13 +48,13 @@ public class AgenteOrquestador extends Agent {
         setCnt();
 
         try {
-            if (StatusAgentesConsultores()) {
+//            if (StatusAgentesConsultores()) {
+//                AgentController a = home.createNewAgent("Consultor_" + getCnt(), AgenteConsultor.class.getName(), listaConsultores[getCnt()]);
+//                a.start();
+//            } else {
                 AgentController a = home.createNewAgent("Consultor_" + getCnt(), AgenteConsultor.class.getName(), listaConsultores[getCnt()]);
                 a.start();
-            } else {
-                AgentController a = home.createNewAgent("Consultor_" + getCnt(), AgenteConsultor.class.getName(), listaConsultores[getCnt()]);
-                a.start();
-            }
+//            }
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
